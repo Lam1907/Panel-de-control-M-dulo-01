@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONTROL PANEL - Danzad Malditos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="control-panel.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="cp-header">
+  <div class="cp-header__left">
+    <div class="cp-logo">
+      <span class="cp-logo__icon">&#9672;</span>
+      <div class="cp-logo__text">
+        <span class="cp-logo__title">DANZAD MALDITOS</span>
+        <span class="cp-logo__sub">CONTROL PANEL v1.0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cp-header__center">
+    <div class="cp-statusbar">
+      <div class="cp-statusbar__item">
+        <span class="cp-dot" id="dotFirebase"></span>
+        <span class="cp-statusbar__label" id="labelFirebase">FIREBASE</span>
+      </div>
+      <span class="cp-statusbar__sep">|</span>
+      <div class="cp-statusbar__item">
+        <span class="cp-statusbar__label">RONDA</span>
+        <span class="cp-statusbar__val" id="displayRound">01</span>
+      </div>
+      <span class="cp-statusbar__sep">|</span>
+      <div class="cp-statusbar__item">
+        <span class="cp-statusbar__label">VOTOS</span>
+        <span class="cp-statusbar__val" id="displayVotes">000</span>
+      </div>
+      <span class="cp-statusbar__sep">|</span>
+      <div class="cp-statusbar__item">
+        <span class="cp-statusbar__label">TIMER</span>
+        <span class="cp-statusbar__val cp-statusbar__val--mono" id="displayTimer">--:--</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cp-header__right">
+    <button class="cp-btn cp-btn--ghost cp-btn--sm" id="btnBack">&#8592; ADMIN</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="cp-main">
+
+  <!-- ESTADO PRE-VOTACION -->
+  <section class="cp-view" id="statePreVoting">
+
+    <div class="cp-toolbar">
+      <div class="cp-toolbar__group">
+        <button class="cp-btn cp-btn--primary cp-btn--lg" id="btnStartVoting">
+          &#9654; INICIAR VOTACION
+        </button>
+        <button class="cp-btn cp-btn--warning" id="btnRestartVoting">
+          &#8634; REINICIAR
+        </button>
+        <button class="cp-btn cp-btn--danger" id="btnClearData">
+          &#10005; BORRAR DATOS
+        </button>
+      </div>
+      <div class="cp-toolbar__right">
+        <label class="cp-field">
+          <span class="cp-field__label">DURACION (seg)</span>
+          <input type="number" class="cp-input cp-input--sm" id="inputDuration"
+                 value="120" min="10" max="3600" />
+        </label>
+      </div>
+    </div>
+
+    <div class="cp-divider">
+      <span class="cp-divider__line"></span>
+      <span class="cp-divider__text">// PARTICIPANTES</span>
+      <span class="cp-divider__line"></span>
+    </div>
+
+    <div class="cp-grid-participants" id="participantsGrid"></div>
+
+  </section>
+
+  <!-- ESTADO POST-VOTACION -->
+  <section class="cp-view cp-view--hidden" id="statePostVoting">
+
+    <div class="cp-toolbar">
+      <div class="cp-toolbar__group">
+        <button class="cp-btn cp-btn--accent cp-btn--lg" id="btnConsolidate">
+          &#8853; CONSOLIDAR PAREJAS
+        </button>
+        <button class="cp-btn cp-btn--primary" id="btnFinalizeRound">
+          &#9658;&#9658; FINALIZAR RONDA
+        </button>
+        <button class="cp-btn cp-btn--warning" id="btnRestartVoting2">
+          &#8634; REINICIAR
+        </button>
+        <button class="cp-btn cp-btn--danger" id="btnClearData2">
+          &#10005; BORRAR DATOS
+        </button>
+      </div>
+      <div class="cp-toolbar__right">
+        <div class="cp-badge cp-badge--danger">&#9679; VOTACION CERRADA</div>
+      </div>
+    </div>
+
+    <div class="cp-divider">
+      <span class="cp-divider__line"></span>
+      <span class="cp-divider__text">// PAREJAS CONSOLIDADAS</span>
+      <span class="cp-divider__line"></span>
+    </div>
+
+    <div class="cp-grid-pairs" id="pairsGrid"></div>
+
+  </section>
+
+</main>
+
+<!-- MODAL: CONFIRMACION GENERICA -->
+<div class="cp-overlay" id="modalConfirm" role="dialog" aria-modal="true">
+  <div class="cp-modal">
+    <div class="cp-modal__hdr">
+      <span class="cp-modal__icon" id="modalConfirmIcon">&#9888;</span>
+      <h2 class="cp-modal__title" id="modalConfirmTitle">CONFIRMAR</h2>
+    </div>
+    <p class="cp-modal__body" id="modalConfirmBody">&#191;Estas seguro?</p>
+    <div class="cp-modal__foot">
+      <button class="cp-btn cp-btn--ghost" id="modalConfirmNo" data-modal-btn>NO, CANCELAR</button>
+      <button class="cp-btn cp-btn--primary" id="modalConfirmYes" data-modal-btn>SI, CONFIRMAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONTRASENA -->
+<div class="cp-overlay" id="modalPassword" role="dialog" aria-modal="true">
+  <div class="cp-modal">
+    <div class="cp-modal__hdr">
+      <span class="cp-modal__icon cp-modal__icon--danger">&#9940;</span>
+      <h2 class="cp-modal__title">ZONA PELIGROSA</h2>
+    </div>
+    <p class="cp-modal__body">
+      Esta accion borrara TODOS los datos del sistema.<br>
+      Introduce la contrasena para continuar.
+    </p>
+    <input type="password" class="cp-input cp-input--full" id="inputPassword"
+           placeholder="Contrasena de administrador..." autocomplete="off" />
+    <p class="cp-modal__error" id="passwordError"></p>
+    <div class="cp-modal__foot">
+      <button class="cp-btn cp-btn--ghost" id="modalPasswordNo" data-modal-btn>CANCELAR</button>
+      <button class="cp-btn cp-btn--danger" id="modalPasswordYes" data-modal-btn>&#9888; BORRAR TODO</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: IMAGEN -->
+<div class="cp-overlay" id="modalImage" role="dialog" aria-modal="true">
+  <div class="cp-modal">
+    <div class="cp-modal__hdr">
+      <span class="cp-modal__icon">&#9673;</span>
+      <h2 class="cp-modal__title">IMAGEN PARTICIPANTE</h2>
+    </div>
+    <div class="cp-img-opts">
+      <button class="cp-btn cp-btn--ghost cp-btn--block" id="btnImageUpload">
+        &#8593; SUBIR DESDE DISPOSITIVO
+      </button>
+      <p class="cp-img-opts__sep">o</p>
+      <input type="text" class="cp-input cp-input--full" id="inputImageUrl"
+             placeholder="https://... pegar URL de imagen" />
+      <button class="cp-btn cp-btn--accent cp-btn--block" id="btnImageUrl">
+        &#8599; USAR ESTA URL
+      </button>
+      <p class="cp-img-opts__sep">o</p>
+      <button class="cp-btn cp-btn--danger cp-btn--block" id="btnImageRemove">
+        &#10005; ELIMINAR IMAGEN ACTUAL
+      </button>
+    </div>
+    <input type="file" id="fileImageInput" accept="image/*" style="display:none" />
+    <div class="cp-modal__foot">
+      <button class="cp-btn cp-btn--ghost" id="modalImageClose" data-modal-btn>CERRAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: INTERCAMBIO -->
+<div class="cp-overlay" id="modalSwap" role="dialog" aria-modal="true">
+  <div class="cp-modal cp-modal--wide">
+    <div class="cp-modal__hdr">
+      <span class="cp-modal__icon">&#8644;</span>
+      <h2 class="cp-modal__title">MOVER / INTERCAMBIAR</h2>
+    </div>
+    <p class="cp-modal__body" id="modalSwapBody">Selecciona el destino:</p>
+    <div class="cp-swap-grid" id="swapGrid"></div>
+    <div class="cp-modal__foot">
+      <button class="cp-btn cp-btn--ghost" id="modalSwapClose" data-modal-btn>CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="cp-toasts" id="toastContainer" aria-live="polite"></div>
+
+<!-- LOADING -->
+<div class="cp-loading cp-loading--hidden" id="loadingOverlay">
+  <div class="cp-loading__inner">
+    <div class="cp-spinner"></div>
+    <span class="cp-loading__text" id="loadingText">ACTUALIZANDO...</span>
+  </div>
+</div>
+
+<!-- APP -->
+<script type="module" src="control-panel.js"></script>
+</body>
+</html>
